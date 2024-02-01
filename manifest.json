@@ -1,0 +1,28 @@
+{
+  "name": "SiteBlocker",
+  "version": "1.0.0",
+  "description": "improving on Rails Website Blocker using a Rails API",
+  "permissions": ["storage", "tabs", "activeTab", "<all_urls>"],
+  "manifest_version": 3,
+  "author": "Gilead Bempah",
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Blocked Sites "
+  },
+  "externally_connectable": {
+    "matches": ["*://localhost/*", "<all_urls>"]
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "128": "logo1-hat.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "css": ["style.css"],
+      "js": ["script.js"]
+    }
+  ]
+}

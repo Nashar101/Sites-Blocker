@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+    <title>Procrast</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body style="width: 600px; height: 300px">
+<div>
+    <h2>Blocked Sites List</h2>
+</div>
+<div id="timer-settings" style=" margin-left: 30px;margin-top: -11px">
+    <input id="days" type="number" min='0', max="999", placeholder="0">
+    <b style="font-size: 30px; margin-top: -6px">:</b>
+    <input id="hours" type="number" min='0', max="24", placeholder="0">
+    <b style="font-size: 30px; margin-top: -6px">:</b>
+    <input id="minutes" type="number" min='0', max="60", placeholder="0">
+    <b style="font-size: 30px; margin-top: -6px">:</b>
+    <input id="seconds" type="number" min='0', max="60", placeholder="0">
+</div>
+<button id="block">Block this site</button>
+<div id="display"></div>
+</body>
+<script src="script.js"></script>
+</html>
