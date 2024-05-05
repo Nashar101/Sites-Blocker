@@ -38,53 +38,57 @@ boot()
 function boot(){
     fetchData()
 }
-async function fetchData(){
-    //change this function to use fetch later
-    const Http = new XMLHttpRequest();
-    const url='http://127.0.0.1:3000/sites';
-    Http.open("GET", url);
-    Http.send();
+ async function fetchData(){
+            console.log("im here")
+            try{
+                const response = await fetch("http://localhost:3000/api/v1/sites")
+                if(response.ok){
+                    const json = await response.json();
+                    console.log(json)
+                    sites = json
+                }
+                else{
+                    throw response;
+                }
+            } catch (e){
+                console.log("An error occured" + e);
+            } finally {
+                block()
+                display()
+            }
 
-    Http.onreadystatechange = (e) => {
-        console.log(Http.responseText)
-        sites = JSON.parse(Http.responseText)
-        console.log(sites)
-        display()
-    }
 }
 function display(){
     var store = ""
     for(let i = 0; i < sites.length; i++) {
-        store += "<div id='site " + i + "' style='display: flex'>" + sites[i].url + "                 " + "</div>" + "<div id='timer" + i + "' style='display: flex'>"
-           +  "<div id='days " + i + "' style='display: flex'>" + new Date(sites[i].expiration_date).getDay() + "</div>" +
-             ":" + "<div id='hours " + i + "' style='display: flex'>" + new Date(sites[i].expiration_date).getHours() + "</div>" +
-            ":" + "<div id='minutes " + i + "' style='display: flex'>" + new Date(sites[i].expiration_date).getMinutes() + "</div>" +
-            ":" + "<div id='seconds" + i + "' style='display: flex'>" + new Date(sites[i].expiration_date).getSeconds() + "</div>" +
+        console.log(i)
+        store += "<div id='site " + i + "' style='display: flex'>" + sites[i].url + "                 " + "</div>" + "<div id='timer " + i + "' style='display: flex'>"
+           +  "<div id='days " + i + "' style='display: flex'>" + "</div>" +
+             ":" + "<div id='hours " + i + "' style='display: flex'>" + "</div>" +
+            ":" + "<div id='minutes " + i + "' style='display: flex'>" + "</div>" +
+            ":" + "<div id='seconds " + i + "' style='display: flex'>" + "</div>" +
             "</div>"
-        startTimer(i, );
+        document.getElementById('display').innerHTML = store
+        startTimer(i, sites[i].expiration_date);
     }
-    console.log("displaying sites")
-    console.log(store)
-    document.getElementById('display').innerHTML = store
 }
 
 function startTimer(number, duedate){
-    let days = document.getElementById('days ' + number).innerHTML
     setInterval(function() {
         var d = Math.floor((new Date(duedate)-Date.now())/1000)
-        days = display_days(d); document.getElementById('days ' + number).innerHTML = value }, 1000)
+        days = display_days(d); document.getElementById('days ' + number).innerHTML = days }, 1000)
     let hours = document.getElementById('hours ' + number).innerHTML
     setInterval(function() {
         var d = Math.floor((new Date(duedate)-Date.now())/1000)
-        hours = display_days(d); document.getElementById('days ' +number).innerHTML = value }, 1000)
+        hours = display_hours(d); document.getElementById('hours ' +number).innerHTML = hours }, 1000)
     let minutes = document.getElementById('minutes ' + number).innerHTML
     setInterval(function() {
         var d = Math.floor((new Date(duedate)-Date.now())/1000)
-        minutes = display_days(d); document.getElementById('days ' +number).innerHTML = value }, 1000)
-    let seconds = document.getElementById('seconds  ' + number).innerHTML
+        minutes = display_minutes(d); document.getElementById('minutes ' +number).innerHTML = minutes }, 1000)
+    let seconds = document.getElementById('seconds ' + number).innerHTML
     setInterval(function() {
         var d = Math.floor((new Date(duedate)-Date.now())/1000)
-        seconds = display_days(d); document.getElementById('days ' + number).innerHTML = value }, 1000)
+        seconds = display_seconds(d); document.getElementById('seconds ' + number).innerHTML = seconds }, 1000)
 }
 
 function display_days(duedate){
@@ -113,32 +117,32 @@ document.querySelector("#block").addEventListener("click", () => {
         let url = tabs[0].url;
 
         // Do something with url
-        fetch("http://127.0.0.1:3000/sites", {
+        fetch("http://127.0.0.1:3000/api/v1/sites", {
             method: "POST",
             body: JSON.stringify({
                 url: url,
                 duration: "Permanent",
-                expiration_date: currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-' + currentDate.getDate()
+                expiration_date: currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-' + currentDate.getDate() + " " + currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds()
             }),
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
             }
         })
-            .then((response) => response.json())
-            .then((json) => console.log(json));
-    });
-    console.log(new Date(Date.now()))
+            .then(document.getElementById('display').innerHTML = "")
+            .then(fetchData());
+    })
 });
 
 function block(array) {
     console.log("let test this shit")
-    console.log(array[0][0])
+    console.log(sites)
+    console.log(sites[0].url)
     console.log(window.location.hostname)
     console.log(window.location.href)
-    for (let i = 0; i < array.length; i++) {
+    for (let i = 0; i < sites.length; i++) {
 
-        console.log(i + ', ' + array[i][0])
-        if (window.location.hostname == array[i][0] + '/' || window.location.href == array[i][0] + '/') {
+        console.log(i + ', ' + sites[i].url)
+        if (window.location.hostname == sites[i].url + '/' || window.location.href == sites[i].url + '/') {
             document.body.innerHTML = generateHTML('site is blocked');
             const displaySite = document.getElementById('site');
             displaySite.textContent = blockedsites[i].toString();
