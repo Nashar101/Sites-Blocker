@@ -54,7 +54,6 @@ function boot(){
                 console.log("An error occured" + e);
             } finally {
                 block()
-                display()
             }
 
 }
@@ -75,40 +74,54 @@ function display(){
 
 function startTimer(number, duedate){
     setInterval(function() {
-        var d = Math.floor((new Date(duedate)-Date.now())/1000)
-        days = display_days(d); document.getElementById('days ' + number).innerHTML = days }, 1000)
-    let hours = document.getElementById('hours ' + number).innerHTML
+        var d = (new Date(duedate)-Date.now())
+        days = display_days(d); 
+        document.getElementById('days ' + number).innerHTML = days }
+        , 1000)
+    
+    
     setInterval(function() {
-        var d = Math.floor((new Date(duedate)-Date.now())/1000)
-        hours = display_hours(d); document.getElementById('hours ' +number).innerHTML = hours }, 1000)
-    let minutes = document.getElementById('minutes ' + number).innerHTML
+        var d = (new Date(duedate)-Date.now())
+        hours = display_hours(d); 
+        document.getElementById('hours ' + number).innerHTML = hours }
+        , 1000)
+    
     setInterval(function() {
-        var d = Math.floor((new Date(duedate)-Date.now())/1000)
-        minutes = display_minutes(d); document.getElementById('minutes ' +number).innerHTML = minutes }, 1000)
-    let seconds = document.getElementById('seconds ' + number).innerHTML
+        var d = (new Date(duedate)-Date.now())
+        minutes = display_minutes(d);
+        document.getElementById('minutes ' + number).innerHTML = minutes }
+        , 1000)
+
     setInterval(function() {
-        var d = Math.floor((new Date(duedate)-Date.now())/1000)
-        seconds = display_seconds(d); document.getElementById('seconds ' + number).innerHTML = seconds }, 1000)
+        var d = (new Date(duedate)-Date.now())
+        seconds = display_seconds(d);
+         document.getElementById('seconds ' + number).innerHTML = seconds }
+         , 1000)
 }
 
 function display_days(duedate){
-    return Math.floor(duedate / (3600 * 24));
+    return Math.floor(duedate / (1000 * 60 * 60 * 24));
 }
 
 function display_hours(duedate){
-    return Math.floor((duedate % (3600 * 24)) / 3600);
+    return Math.floor((duedate % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 }
 function display_minutes(duedate){
-    return Math.floor(((duedate % (3600*24))%3600)/60);
+    return Math.floor((duedate % (1000 * 60 * 60)) / (1000 * 60));
 }
 
 function display_seconds(duedate){
-    return  duedate%60;
+    return  Math.floor((duedate/1000)%60);
 }
 
 
 document.querySelector("#block").addEventListener("click", () => {
     var currentDate = new Date(Date.now() + document.getElementById("days").value*24*60*60*1000 + document.getElementById("hours").value*60*60*1000 + document.getElementById("minutes").value*60*1000 + document.getElementById("seconds").value*1000)
+
+    console.log("this is the days you wanted added " + document.getElementById("days").value)
+    console.log("this is the hours you wanted added " + document.getElementById("hours").value)
+    console.log("this is the minutes you wanted added " + document.getElementById("minutes").value)
+    console.log("this is the seconds you wanted added " + document.getElementById("seconds").value) 
     document.getElementById("days").value = 0;
     document.getElementById("hours").value = 0;
     document.getElementById("minutes").value = 0;
@@ -133,23 +146,20 @@ document.querySelector("#block").addEventListener("click", () => {
     })
 });
 
+
 function block(array) {
-    console.log("let test this shit")
-    console.log(sites)
-    console.log(sites[0].url)
-    console.log(window.location.hostname)
-    console.log(window.location.href)
     for (let i = 0; i < sites.length; i++) {
 
         console.log(i + ', ' + sites[i].url)
-        if (window.location.hostname == sites[i].url + '/' || window.location.href == sites[i].url + '/') {
+        console.log("https://" + window.location.hostname == sites[i].url)
+        if ("https://" + window.location.hostname == sites[i].url) {
             document.body.innerHTML = generateHTML('site is blocked');
+            console.log("blocked site")
             const displaySite = document.getElementById('site');
             displaySite.textContent = blockedsites[i].toString();
             blockedSite = blockedsites[i].toString();
             break;
         }
     }
+    display()
 }
-//alert("this is a test")
-//document.body.innerHTML = generateHTML('site is blocked')
