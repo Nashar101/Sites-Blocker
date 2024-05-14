@@ -6,14 +6,15 @@
   "manifest_version": 3,
   "author": "Gilead Bempah",
   "action": {
-    "default_popup": "index.html",
-    "default_title": "Blocked Sites "
+    "default_popup": "popup-sign-in.html",
+    "default_title": "Blocked Sites"
   },
   "externally_connectable": {
     "matches": ["*://localhost/*", "<all_urls>"]
   },
   "background": {
-    "service_worker": "background.js"
+  "service_worker": "background.js",
+  "type": "module"
   },
   "icons": {
     "128": "logo1-hat.png"

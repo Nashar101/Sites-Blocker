@@ -34,6 +34,34 @@ const generateHTML = pageName => {
 
 var sites = []
 
+const autoLogin = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                if (token) {
+                    const url = "http://localhost:3000/login"; // Endpoint for auto-login
+                    const response = await fetch(url, {
+                        method: "get",
+                        headers: {
+                            Authorization: token,
+                        },
+                    });
+                    const data = await response.json();
+                    console.log(data)
+                    console.log(response)
+                    if (!response.ok) throw data.error;
+                    setCurrUser(data);
+                }
+                else{
+                    login()
+                }
+            } catch (error) {
+                console.log("Auto-login error", error);
+            }
+};
+
+const login = () => {
+}
+
 boot()
 function boot(){
     fetchData()
